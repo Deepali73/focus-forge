@@ -21,6 +21,7 @@ export const FocusMonitor: React.FC<FocusMonitorProps> = ({ user, onUserUpdate }
   const [sleepDetections, setSleepDetections] = useState(0);
   const [incidentCooldown, setIncidentCooldown] = useState(false);
   const cooldownTimeoutRef = useRef<number | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(true);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const cameraManager = useRef<CameraManager>(new CameraManager());
@@ -31,14 +32,17 @@ export const FocusMonitor: React.FC<FocusMonitorProps> = ({ user, onUserUpdate }
   const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
-    checkCameraPermission();
+    // Only check camera permission after onboarding
+    if (!showOnboarding) {
+      checkCameraPermission();
+    }
     return () => {
       stopMonitoring();
       if (cooldownTimeoutRef.current) {
         clearTimeout(cooldownTimeoutRef.current);
       }
     };
-  }, []);
+  }, [showOnboarding]);
 
   const checkCameraPermission = async () => {
     try {
@@ -194,6 +198,28 @@ export const FocusMonitor: React.FC<FocusMonitorProps> = ({ user, onUserUpdate }
     const secs = Math.floor(seconds % 60);
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
+
+  if (showOnboarding && !isMonitoring) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center animate-fadeIn">
+          <Camera className="w-12 h-12 mx-auto mb-4 text-indigo-500 animate-pulse" />
+          <h2 className="text-2xl font-bold mb-2 text-gray-900">We need your camera!</h2>
+          <p className="text-gray-700 mb-6">FocusForge uses your camera to help you stay alert and focused.<br />
+            <span className="font-medium">Your video never leaves your device.</span><br />
+            We only detect if your eyes are open or closed—no images are stored.<br />
+            Please click <b>Continue</b> and then <b>Allow</b> when prompted by your browser.
+          </p>
+          <button
+            className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-full shadow-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 text-lg font-bold focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            onClick={() => setShowOnboarding(false)}
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (cameraPermission === false) {
     return (
