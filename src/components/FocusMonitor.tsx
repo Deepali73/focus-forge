@@ -199,23 +199,34 @@ export const FocusMonitor: React.FC<FocusMonitorProps> = ({ user, onUserUpdate }
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Handler for onboarding continue
+  const handleOnboardingContinue = async () => {
+    setShowOnboarding(false);
+    await checkCameraPermission();
+  };
+
   if (showOnboarding && !isMonitoring) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
         <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center animate-fadeIn">
           <Camera className="w-12 h-12 mx-auto mb-4 text-indigo-500 animate-pulse" />
           <h2 className="text-2xl font-bold mb-2 text-gray-900">We need your camera!</h2>
-          <p className="text-gray-700 mb-6">FocusForge uses your camera to help you stay alert and focused.<br />
-            <span className="font-medium">Your video never leaves your device.</span><br />
+          <p className="text-gray-700 mb-6">
+            FocusForge uses your camera to help you stay alert and focused.<br />
+            <span className="font-medium text-green-700">Your video never leaves your device.</span><br />
             We only detect if your eyes are open or closed—no images are stored.<br />
-            Please click <b>Continue</b> and then <b>Allow</b> when prompted by your browser.
+            <span className="text-indigo-600 font-semibold">Please click <b>Continue</b> and then <b>Allow</b> when prompted by your browser.</span>
           </p>
           <button
-            className="px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-full shadow-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 text-lg font-bold focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            onClick={() => setShowOnboarding(false)}
+            autoFocus
+            className="px-10 py-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-full shadow-2xl hover:from-indigo-600 hover:to-pink-700 transition-all duration-200 text-xl font-extrabold focus:outline-none focus:ring-4 focus:ring-indigo-400 mb-2 animate-glow"
+            onClick={handleOnboardingContinue}
           >
             Continue
           </button>
+          <div className="mt-4 text-sm text-gray-500">
+            If you accidentally block camera access, refresh the page and try again.
+          </div>
         </div>
       </div>
     );
