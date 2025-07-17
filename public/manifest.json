@@ -1,0 +1,27 @@
+{
+  "name": "FocusForge - Focus Companion",
+  "short_name": "FocusForge",
+  "description": "Stay focused and productive with real-time eye tracking and smart alerts",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4F46E5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "education", "utilities"],
+  "screenshots": [
+    {
+      "src": "/vite.svg",
+      "sizes": "640x480",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    }
+  ]
+}
